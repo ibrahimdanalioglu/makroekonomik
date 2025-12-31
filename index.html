@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asgari Ücret Alım Gücü Endeksi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2233",
+                        "border-light": "#e7ebf3",
+                        "border-dark": "#2a3447",
+                        "text-main-light": "#0d121b",
+                        "text-main-dark": "#ffffff",
+                        "text-secondary-light": "#4c669a",
+                        "text-secondary-dark": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display min-h-screen flex flex-col">
+    <div id="app" class="flex flex-col min-h-screen">
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-border-light dark:border-border-dark px-6 lg:px-10 py-3 bg-surface-light dark:bg-surface-dark sticky top-0 z-50">
+            <div class="flex items-center gap-4">
+                <div class="size-10 overflow-hidden rounded-md flex items-center justify-center">
+                    <img alt="Çay Simit Icon" class="w-full h-full object-cover" src="1a2223-simit.png" />
+                </div>
+                <h2
+                    class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight tracking-tight">
+                    Çay-Simit Endeksi</h2>
+            </div>
+        </header>
+        <main class="flex-1 w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                <div class="flex flex-col gap-2 max-w-2xl">
+                    <h1
+                        class="text-4xl md:text-5xl font-black leading-tight tracking-tight text-text-main-light dark:text-text-main-dark">
+                        Asgari Ücret Alım Gücü</h1>
+                    <p
+                        class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-relaxed">
+                        Güncel asgari ücretin ekmek, altın, benzin ve döviz gibi temel ihtiyaçlar karşısındaki gerçek
+                        değerini keşfedin.
+                    </p>
+                    <div
+                        class="flex items-center gap-2 mt-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                        <span class="material-symbols-outlined text-sm">schedule</span>
+                        <span id="last-updated"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-8">
+                <div id="salary-card"
+                    class="bg-gradient-to-r from-primary to-blue-600 rounded-xl p-8 text-white shadow-lg relative overflow-hidden">
+                </div>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
+            </div>
+
+        </main>
+        <footer
+            class="mt-12 border-t border-border-light dark:border-border-dark pt-8 w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center gap-4 text-text-secondary-light dark:text-text-secondary-dark">
+                <p class="text-sm">© 2024 Çay-Simit Endeksi. Veriler bilgilendirme amaçlıdır.</p>
+                <div class="flex gap-6 text-sm">
+                    <a class="hover:text-primary transition-colors" href="#">Metodoloji</a>
+                    <a class="hover:text-primary transition-colors" href="#">Veri Kaynakları</a>
+                    <a class="hover:text-primary transition-colors" href="#">Gizlilik Politikası</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for Bread Detail -->
+    <div id="bread-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div
+            class="absolute inset-x-4 top-1/2 -translate-y-1/2 md:left-1/2 md:-translate-x-1/2 md:max-w-4xl w-full max-h-[90vh] bg-surface-light dark:bg-surface-dark rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div
+                class="flex items-center justify-between p-6 border-b border-border-light dark:border-border-dark bg-primary text-white">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-3xl">bakery_dining</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                        <h2 class="text-xl font-bold">Ekmek Alım Gücü Geçmişi</h2>
+                        <button id="toggle-bread-view"
+                            class="text-xs font-bold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-all flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">show_chart</span>
+                            <span>Grafiği Göster</span>
+                        </button>
+                    </div>
+                </div>
+                <button id="close-modal" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto pt-0 px-6 pb-6 mt-4">
+                <div id="bread-table-container">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-[-1px] bg-surface-light dark:bg-surface-dark z-10">
+                            <tr>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark">
+                                    Dönem</th>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark">
+                                    Asgari Ücret</th>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark">
+                                    Ekmek Fiyatı</th>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark">
+                                    Alım Gücü (Adet)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bread-table-body">
+                            <!-- Content will be injected -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="bread-chart-container" class="hidden h-[400px] w-full mt-4">
+                    <canvas id="breadModalChart"></canvas>
+                </div>
+            </div>
+            <div
+                class="p-6 border-t border-border-light dark:border-border-dark text-xs text-text-secondary-light dark:text-text-secondary-dark">
+                * Ekmek fiyatları İstanbul Fırıncılar Odasının https://www.istfo.org/ekmek-fiyat-tarifeleri web
+                sitesinden alınmıştır.
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Limits Detail (Açlık/Yoksulluk) -->
+    <div id="limits-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div
+            class="absolute inset-x-4 top-1/2 -translate-y-1/2 md:left-1/2 md:-translate-x-1/2 md:max-w-4xl w-full max-h-[90vh] bg-surface-light dark:bg-surface-dark rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div
+                class="flex items-center justify-between p-6 border-b border-border-light dark:border-border-dark bg-primary text-white">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-3xl">analytics</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                        <h2 class="text-xl font-bold">Açlık ve Yoksulluk Sınırı Geçmişi</h2>
+                        <button id="toggle-limits-view"
+                            class="text-xs font-bold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-all flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">show_chart</span>
+                            <span>Grafiği Göster</span>
+                        </button>
+                    </div>
+                </div>
+                <button id="close-limits-modal" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto pt-0 px-6 pb-6 mt-4">
+                <div id="limits-table-container">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-[-1px] bg-surface-light dark:bg-surface-dark z-10">
+                            <tr>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark">
+                                    Dönem</th>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                                    Asgari Ücret</th>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                                    Açlık Sınırı</th>
+                                <th
+                                    class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                                    Yoksulluk Sınırı</th>
+                            </tr>
+                        </thead>
+                        <tbody id="limits-table-body">
+                            <!-- Content will be injected -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="limits-chart-container" class="hidden h-[400px] w-full mt-4">
+                    <canvas id="limitsModalChart"></canvas>
+                </div>
+            </div>
+            <div
+                class="p-6 border-t border-border-light dark:border-border-dark text-xs text-text-secondary-light dark:text-text-secondary-dark">
+                * Veriler TÜRK-İŞ tarafından her ay yayınlanan açlık ve yoksulluk sınırı raporlarından alınmıştır.
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="historical_data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

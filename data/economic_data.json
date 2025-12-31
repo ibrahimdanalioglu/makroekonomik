@@ -1,0 +1,893 @@
+{
+  "inflation": [
+    {
+      "year": 2020,
+      "month": "Eylül",
+      "monthly": 3.61
+    },
+    {
+      "year": 2020,
+      "month": "Ekim",
+      "monthly": 2.56
+    },
+    {
+      "year": 2020,
+      "month": "Kasım",
+      "monthly": 3.43
+    },
+    {
+      "year": 2020,
+      "month": "Aralık",
+      "monthly": 4.08,
+      "annual": 36.72
+    },
+    {
+      "year": 2021,
+      "month": "Ocak",
+      "monthly": 2.99
+    },
+    {
+      "year": 2021,
+      "month": "Şubat",
+      "monthly": 1.84
+    },
+    {
+      "year": 2021,
+      "month": "Mart",
+      "monthly": 3.36
+    },
+    {
+      "year": 2021,
+      "month": "Nisan",
+      "monthly": 2.62
+    },
+    {
+      "year": 2021,
+      "month": "Haziran",
+      "monthly": 3.28,
+      "annual": 19.16
+    },
+    {
+      "year": 2021,
+      "month": "Temmuz",
+      "monthly": 4.89,
+      "annual": 25.14
+    },
+    {
+      "year": 2021,
+      "month": "Ağustos",
+      "monthly": 4.06,
+      "annual": 30.39
+    },
+    {
+      "year": 2021,
+      "month": "Eylül",
+      "monthly": 2.89,
+      "annual": 44.7
+    },
+    {
+      "year": 2021,
+      "month": "Ekim",
+      "monthly": 6.9,
+      "annual": 49.87
+    },
+    {
+      "year": 2021,
+      "month": "Kasım",
+      "monthly": 9.91,
+      "annual": 58.65
+    },
+    {
+      "year": 2021,
+      "month": "Aralık",
+      "monthly": 19.35,
+      "annual": 82.81
+    },
+    {
+      "year": 2022,
+      "month": "Ocak",
+      "monthly": 15.52,
+      "annual": 114.87
+    },
+    {
+      "year": 2022,
+      "month": "Şubat",
+      "monthly": 5.44,
+      "annual": 123.8
+    },
+    {
+      "year": 2022,
+      "month": "Mart",
+      "monthly": 11.93,
+      "annual": 142.63
+    },
+    {
+      "year": 2022,
+      "month": "Nisan",
+      "monthly": 8.68,
+      "annual": 156.86
+    },
+    {
+      "year": 2022,
+      "month": "Haziran",
+      "monthly": 8.31,
+      "annual": 175.55
+    },
+    {
+      "year": 2022,
+      "month": "Temmuz",
+      "monthly": 5.03,
+      "annual": 176.04
+    },
+    {
+      "year": 2022,
+      "month": "Ağustos",
+      "monthly": 5.86,
+      "annual": 181.37
+    },
+    {
+      "year": 2022,
+      "month": "Eylül",
+      "monthly": 5.3,
+      "annual": 186.27
+    },
+    {
+      "year": 2022,
+      "month": "Ekim",
+      "monthly": 7.18,
+      "annual": 185.34
+    },
+    {
+      "year": 2022,
+      "month": "Kasım",
+      "monthly": 4.24,
+      "annual": 170.7
+    },
+    {
+      "year": 2022,
+      "month": "Aralık",
+      "monthly": 5.18,
+      "annual": 137.55
+    },
+    {
+      "year": 2023,
+      "month": "Ocak",
+      "monthly": 9.26,
+      "annual": 121.62
+    },
+    {
+      "year": 2023,
+      "month": "Şubat",
+      "monthly": 7.21,
+      "annual": 126.91
+    },
+    {
+      "year": 2023,
+      "month": "Mart",
+      "monthly": 5.08,
+      "annual": 112.51
+    },
+    {
+      "year": 2023,
+      "month": "Nisan",
+      "monthly": 4.86,
+      "annual": 105.19
+    },
+    {
+      "year": 2023,
+      "month": "Haziran",
+      "monthly": 8.54,
+      "annual": 108.58
+    },
+    {
+      "year": 2023,
+      "month": "Temmuz",
+      "monthly": 13.18,
+      "annual": 122.88
+    },
+    {
+      "year": 2023,
+      "month": "Ağustos",
+      "monthly": 8.59,
+      "annual": 128.05
+    },
+    {
+      "year": 2023,
+      "month": "Eylül",
+      "monthly": 6.24,
+      "annual": 130.13
+    },
+    {
+      "year": 2023,
+      "month": "Ekim",
+      "monthly": 5.09,
+      "annual": 126.18
+    },
+    {
+      "year": 2023,
+      "month": "Kasım",
+      "monthly": 5.58,
+      "annual": 129.27
+    },
+    {
+      "year": 2023,
+      "month": "Aralık",
+      "monthly": 4.12,
+      "annual": 127.21
+    },
+    {
+      "year": 2024,
+      "month": "Ocak",
+      "monthly": 9.38,
+      "annual": 129.11
+    },
+    {
+      "year": 2024,
+      "month": "Şubat",
+      "monthly": 4.32,
+      "annual": 121.98
+    },
+    {
+      "year": 2024,
+      "month": "Mart",
+      "monthly": 5.68,
+      "annual": 124.63
+    },
+    {
+      "year": 2024,
+      "month": "Nisan",
+      "monthly": 5.02,
+      "annual": 124.35
+    },
+    {
+      "year": 2024,
+      "month": "Haziran",
+      "monthly": 4.47,
+      "annual": 113.08
+    },
+    {
+      "year": 2024,
+      "month": "Temmuz",
+      "monthly": 5.91,
+      "annual": 100.88
+    },
+    {
+      "year": 2024,
+      "month": "Ağustos",
+      "monthly": 3.47,
+      "annual": 90.35
+    },
+    {
+      "year": 2024,
+      "month": "Eylül",
+      "monthly": 5.34,
+      "annual": 88.63
+    },
+    {
+      "year": 2024,
+      "month": "Ekim",
+      "monthly": 5.57,
+      "annual": 89.77
+    },
+    {
+      "year": 2024,
+      "month": "Kasım",
+      "monthly": 4.06,
+      "annual": 86.76
+    },
+    {
+      "year": 2024,
+      "month": "Aralık",
+      "monthly": 2.34,
+      "annual": 83.4
+    },
+    {
+      "year": 2025,
+      "month": "Ocak",
+      "monthly": 8.22,
+      "annual": 81.01
+    },
+    {
+      "year": 2025,
+      "month": "Şubat",
+      "monthly": 3.37,
+      "annual": 79.51
+    },
+    {
+      "year": 2025,
+      "month": "Mart",
+      "monthly": 3.91,
+      "annual": 75.2
+    },
+    {
+      "year": 2025,
+      "month": "Nisan",
+      "monthly": 4.46,
+      "annual": 73.88
+    },
+    {
+      "year": 2025,
+      "month": "Haziran",
+      "monthly": 3.05,
+      "annual": 68.68
+    },
+    {
+      "year": 2025,
+      "month": "Temmuz",
+      "monthly": 3.75,
+      "annual": 65.15
+    },
+    {
+      "year": 2025,
+      "month": "Ağustos",
+      "monthly": 3.23,
+      "annual": 65.49
+    },
+    {
+      "year": 2025,
+      "month": "Eylül",
+      "monthly": 3.79,
+      "annual": 63.23
+    },
+    {
+      "year": 2025,
+      "month": "Ekim",
+      "monthly": 3.74,
+      "annual": 60
+    },
+    {
+      "year": 2025,
+      "month": "Kasım",
+      "monthly": 2.13,
+      "annual": 56.82
+    },
+    {
+      "year": 2025,
+      "month": "Aralık"
+    }
+  ],
+  "minimumWage": [
+    {
+      "period": "01.08.1996 - 31.07.1997",
+      "net": 11.339802
+    },
+    {
+      "period": "01.08.1997 - 31.07.1998",
+      "net": 23.474588
+    },
+    {
+      "period": "01.08.1998 - 30.09.1998",
+      "net": 33.808514
+    },
+    {
+      "period": "01.10.1998 - 31.12.1998",
+      "net": 34.573946
+    },
+    {
+      "period": "1999 Ocak-Haziran",
+      "net": 58.948065
+    },
+    {
+      "period": "01.07.1999 - 15.08.1999",
+      "net": 70.22232
+    },
+    {
+      "period": "16.08.1999 - 31.12.1999",
+      "net": 70.11
+    },
+    {
+      "period": "01.01.2000 - 31.03.2000",
+      "net": 82.4175
+    },
+    {
+      "period": "01.04.2000 - 31.12.2000",
+      "net": 86.9229
+    },
+    {
+      "period": "2001 Ocak-Haziran",
+      "net": 102.3696
+    },
+    {
+      "period": "01.07.2001 - 31.07.2001",
+      "net": 107.32383
+    },
+    {
+      "period": "01.08.2001 - 31.12.2001",
+      "net": 122.18652
+    },
+    {
+      "period": "2002 Ocak-Haziran",
+      "net": 163.563536
+    },
+    {
+      "period": "2002 Temmuz-Aralık",
+      "net": 184.251937
+    },
+    {
+      "period": "2003 Yıllık",
+      "net": 225.999
+    },
+    {
+      "period": "2004 Ocak-Haziran",
+      "net": 303.0795
+    },
+    {
+      "period": "2004 Temmuz-Aralık",
+      "net": 318.233475
+    },
+    {
+      "period": "2005 Yıllık",
+      "net": 350.15
+    },
+    {
+      "period": "2006 Yıllık",
+      "net": 380.46
+    },
+    {
+      "period": "2007 Yıllık",
+      "net": 419.15
+    },
+    {
+      "period": "2008 Ocak-Haziran",
+      "net": 481.55
+    },
+    {
+      "period": "2008 Temmuz-Aralık",
+      "net": 503.26
+    },
+    {
+      "period": "2009 Ocak-Haziran",
+      "net": 527.13
+    },
+    {
+      "period": "2009 Temmuz-Aralık",
+      "net": 546.48
+    },
+    {
+      "period": 2010,
+      "net": 576.57
+    },
+    {
+      "period": 2010,
+      "net": 599.12
+    },
+    {
+      "period": 2011,
+      "net": 629.96
+    },
+    {
+      "period": 2011,
+      "net": 658.95
+    },
+    {
+      "period": 2012,
+      "net": 701.13
+    },
+    {
+      "period": 2012,
+      "net": 739.79
+    },
+    {
+      "period": 2013,
+      "net": 773.01
+    },
+    {
+      "period": 2013,
+      "net": 803.68
+    },
+    {
+      "period": 2014,
+      "net": 846
+    },
+    {
+      "period": 2014,
+      "net": 891.03
+    },
+    {
+      "period": 2015,
+      "net": 949.07
+    },
+    {
+      "period": 2015,
+      "net": 1000.54
+    },
+    {
+      "period": 2016,
+      "net": 1300.99
+    },
+    {
+      "period": 2017,
+      "net": 1404.06
+    },
+    {
+      "period": 2018,
+      "net": 1603.12
+    },
+    {
+      "period": 2019,
+      "net": 2020.9
+    },
+    {
+      "period": 2020,
+      "net": 2324.71
+    },
+    {
+      "period": 2021,
+      "net": 2825.9
+    },
+    {
+      "period": 2022,
+      "net": 4253.4
+    },
+    {
+      "period": 2022,
+      "net": 5500.35
+    },
+    {
+      "period": 2023,
+      "net": 8506.8
+    },
+    {
+      "period": 2023,
+      "net": 11402.32
+    },
+    {
+      "period": 2024,
+      "net": 17002.12
+    },
+    {
+      "period": 2025,
+      "net": 22104.67
+    },
+    {
+      "period": 2026,
+      "net": 28075.5
+    }
+  ],
+  "limits": [
+    {
+      "year": 2024,
+      "month": "Ocak",
+      "hungerLimit": 15048.89,
+      "povertyLimit": 49019,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Şubat",
+      "hungerLimit": 16257,
+      "povertyLimit": 52955,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Mart",
+      "hungerLimit": 16792.99,
+      "povertyLimit": 54700.32,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Nisan",
+      "hungerLimit": 17725.19,
+      "povertyLimit": 57736.78,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Haziran",
+      "hungerLimit": 18978.77,
+      "povertyLimit": 61820.1,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Temmuz",
+      "hungerLimit": 19234.43,
+      "povertyLimit": 62652.87,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Ağustos",
+      "hungerLimit": 19271.15,
+      "povertyLimit": 62772.48,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Eylül",
+      "hungerLimit": 19830.73,
+      "povertyLimit": 64595.21,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Ekim",
+      "hungerLimit": 20431.83,
+      "povertyLimit": 66553.19,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Kasım",
+      "hungerLimit": 20561.65,
+      "povertyLimit": 66976.06,
+      "minWage": 17002
+    },
+    {
+      "year": 2024,
+      "month": "Aralık",
+      "hungerLimit": 21083.28,
+      "povertyLimit": 68675.17,
+      "minWage": 17002
+    },
+    {
+      "year": 2025,
+      "month": "Ocak",
+      "hungerLimit": 22131,
+      "povertyLimit": 72088,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Şubat",
+      "hungerLimit": 23324,
+      "povertyLimit": 75973,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Mart",
+      "hungerLimit": 23615,
+      "povertyLimit": 76922,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Nisan",
+      "hungerLimit": 24035,
+      "povertyLimit": 78292,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Haziran",
+      "hungerLimit": 26115.18,
+      "povertyLimit": 85065.75,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Temmuz",
+      "hungerLimit": 26413.17,
+      "povertyLimit": 86036.38,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Ağustos",
+      "hungerLimit": 27111.17,
+      "povertyLimit": 88309.98,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Eylül",
+      "hungerLimit": 27970.5,
+      "povertyLimit": 91109.11,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Ekim",
+      "hungerLimit": 28411.95,
+      "povertyLimit": 92547.07,
+      "minWage": 22104
+    },
+    {
+      "year": 2025,
+      "month": "Kasım",
+      "hungerLimit": 29827.78,
+      "povertyLimit": 97158.89,
+      "minWage": 22104
+    }
+  ],
+  "bread": [
+    {
+      "date": "2025-08-01",
+      "price": 15,
+      "gram": 200
+    },
+    {
+      "date": "2025-01-01",
+      "price": 12.5,
+      "gram": 200
+    },
+    {
+      "date": "2024-06-01",
+      "price": 10,
+      "gram": 200
+    },
+    {
+      "date": "2023-12-12",
+      "price": 8,
+      "gram": 210,
+      "note": "Haziran ayında Nebati yerine M.Şimşek atandı."
+    },
+    {
+      "date": "2022-07-05",
+      "price": 4,
+      "gram": 210,
+      "note": "Nebati dönemi"
+    },
+    {
+      "date": "2022-03-11",
+      "price": 3,
+      "gram": 210,
+      "note": "Nebati dönemi"
+    },
+    {
+      "date": "2021-11-15",
+      "price": 2.5,
+      "gram": 230
+    },
+    {
+      "date": "2021-04-12",
+      "price": 2,
+      "gram": 220
+    },
+    {
+      "date": "2020-10-15",
+      "price": 1.5,
+      "gram": 200
+    },
+    {
+      "date": "2019-05-09",
+      "price": 1.25,
+      "gram": 200
+    },
+    {
+      "date": "2015-12-17",
+      "price": 1.25,
+      "gram": 250
+    },
+    {
+      "date": 2014,
+      "price": 1,
+      "gram": 250
+    },
+    {
+      "date": 2013,
+      "price": 1,
+      "gram": 250
+    },
+    {
+      "date": 2012,
+      "price": 0.855,
+      "gram": 300
+    },
+    {
+      "date": 2011,
+      "price": 0.85,
+      "gram": 300
+    },
+    {
+      "date": 2010,
+      "price": 0.4,
+      "gram": 200
+    },
+    {
+      "date": 2009,
+      "price": 0.4,
+      "gram": 200
+    },
+    {
+      "date": 2008,
+      "price": 0.375,
+      "gram": 200,
+      "note": "Abd'deki mortgage krizi tüm dünyayı etkiledi"
+    },
+    {
+      "date": 2007,
+      "price": 0.37,
+      "gram": 200
+    },
+    {
+      "date": 2006,
+      "price": 0.35,
+      "gram": 200
+    },
+    {
+      "date": 2005,
+      "price": 0.325,
+      "gram": 200,
+      "note": "Türk lirasından 6 sıfır atıldı"
+    },
+    {
+      "date": 2004,
+      "price": 300000,
+      "gram": 200
+    },
+    {
+      "date": 2003,
+      "price": 275000,
+      "gram": 200
+    },
+    {
+      "date": 2002,
+      "price": 250000,
+      "gram": 200
+    },
+    {
+      "date": 2001,
+      "price": 150000,
+      "gram": 200,
+      "note": "Ecevit Hükümeti 2001 Krizi"
+    },
+    {
+      "date": 2000,
+      "price": 100000,
+      "gram": 200
+    },
+    {
+      "date": 1999,
+      "price": 75000,
+      "gram": 200
+    },
+    {
+      "date": 1998,
+      "price": 60000,
+      "gram": 200
+    },
+    {
+      "date": 1997,
+      "price": 28000,
+      "gram": 200
+    },
+    {
+      "date": 1996,
+      "price": 21600,
+      "gram": 300
+    },
+    {
+      "date": 1995,
+      "price": 11250,
+      "gram": 300
+    },
+    {
+      "date": 1994,
+      "price": 5625,
+      "gram": 300,
+      "note": "Çiller Hükümeti 1994 krizi. %125 enflasyon yaşanmış."
+    },
+    {
+      "date": 1993,
+      "price": 3750,
+      "gram": 400
+    },
+    {
+      "date": 1992,
+      "price": 2500,
+      "gram": 400,
+      "note": "Enflasyon oranı %65"
+    },
+    {
+      "date": 1991,
+      "price": 1250,
+      "gram": 400,
+      "note": "%71 enflasyon yaşanmış"
+    },
+    {
+      "date": 1990,
+      "price": 200,
+      "gram": 400,
+      "note": "O yıl %60 enflasyon yaşanmış"
+    },
+    {
+      "date": 1989,
+      "price": 200,
+      "gram": 400
+    }
+  ]
+}

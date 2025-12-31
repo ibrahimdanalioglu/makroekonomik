@@ -1,0 +1,25 @@
+:root {
+    --primary: #2b6cee;
+    --background-light: #f6f6f8;
+    --background-dark: #101622;
+    --surface-light: #ffffff;
+    --surface-dark: #1a2233;
+    --text-main-light: #0d121b;
+    --text-main-dark: #ffffff;
+    --text-secondary-light: #4c669a;
+    --text-secondary-dark: #94a3b8;
+    --border-light: #e7ebf3;
+    --border-dark: #2a3447;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
