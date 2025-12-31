@@ -17,9 +17,9 @@ function createSalaryCardHTML(data) {
             <div>
                 <p class="text-blue-100 text-sm font-medium uppercase tracking-wider mb-1">Güncel Net Aylık Ücret</p>
                 <div class="flex items-baseline gap-2">
-                    <h2 class="text-5xl md:text-6xl font-black tracking-tight">₺${formatCurrency(data.net)}</h2>
+                    <h2 class="text-4xl md:text-6xl font-black tracking-tight">₺${formatCurrency(data.net)}</h2>
                 </div>
-                <p class="text-blue-100 mt-2 text-sm">Brüt: ₺${formatCurrency(data.gross)} • İşverene Maliyeti: ₺${formatCurrency(data.costToEmployer)}</p>
+                <p class="text-blue-100 mt-2 text-sm leading-snug">Brüt: ₺${formatCurrency(data.gross)} <span class="hidden sm:inline">•</span> <br class="sm:hidden"> İşverene Maliyeti: ₺${formatCurrency(data.costToEmployer)}</p>
                 <div class="mt-6 pt-5 border-t border-white/20 flex flex-col sm:flex-row gap-8">
                     <div>
                         <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Açlık Sınırı (Kasım 2025)</p>
@@ -35,8 +35,8 @@ function createSalaryCardHTML(data) {
                     <span>Geçmiş Veriler ve Detaylar için tıklayınız</span>
                 </button>
             </div>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 min-w-[180px]">
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 flex-1 min-w-[140px]">
                     <div class="flex items-center gap-2 mb-2 text-blue-50">
                         <span class="material-symbols-outlined">trending_up</span>
                         <span class="text-sm font-medium">Ücret Artışı</span>
@@ -44,7 +44,7 @@ function createSalaryCardHTML(data) {
                     <p class="text-2xl font-bold">+%${formatNumber(data.yearlyChange, 2)}</p>
                     <p class="text-xs text-blue-200">Önceki ücrete kıyasla</p>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 min-w-[180px]">
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 flex-1 min-w-[140px]">
                     <div class="flex items-center gap-2 mb-2 text-blue-50">
                         <span class="material-symbols-outlined">analytics</span>
                         <span class="text-sm font-medium">Enflasyon Oranı</span>
