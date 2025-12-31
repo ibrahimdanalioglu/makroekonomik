@@ -107,13 +107,13 @@ function openBreadModal() {
 
         return `
             <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
-                <td class="py-4 px-4 text-sm font-medium">${b.date}</td>
-                <td class="py-4 px-4 text-sm font-semibold">₺${minWage.toLocaleString('tr-TR', { minimumFractionDigits: minWage < 1000000 ? 2 : 0, maximumFractionDigits: 2 })}</td>
-                <td class="py-4 px-4 text-sm">₺${breadPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 10 })}</td>
-                <td class="py-4 px-4">
+                <td class="py-4 px-2 sm:px-4 text-xs sm:text-sm font-medium">${b.date}</td>
+                <td class="py-4 px-2 sm:px-4 text-xs sm:text-sm font-semibold">₺${minWage.toLocaleString('tr-TR', { minimumFractionDigits: minWage < 1000000 ? 2 : 0, maximumFractionDigits: 2 })}</td>
+                <td class="hidden sm:table-cell py-4 px-4 text-sm">₺${breadPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 10 })}</td>
+                <td class="py-4 px-2 sm:px-4">
                     <div class="flex items-center gap-2">
-                        <span class="text-sm font-bold text-primary">${Math.floor(quantity)} Adet</span>
-                        <div class="h-1.5 bg-border-light dark:bg-border-dark rounded-full w-24 overflow-hidden">
+                        <span class="text-xs sm:text-sm font-bold text-primary">${Math.floor(quantity)} Adet</span>
+                        <div class="hidden sm:block h-1.5 bg-border-light dark:bg-border-dark rounded-full w-24 overflow-hidden">
                             <div class="h-full bg-primary" style="width: ${Math.min((quantity / 2000) * 100, 100)}%"></div>
                         </div>
                     </div>
@@ -250,10 +250,10 @@ function openLimitsModal() {
 
     const tableRows = sortedLimits.map(item => `
         <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
-            <td class="py-4 px-4 text-sm font-medium">${item.month} ${item.year}</td>
-            <td class="py-4 px-4 text-sm font-semibold text-right">₺${formatCurrency(item.minWage)}</td>
-            <td class="py-4 px-4 text-sm text-red-500 font-medium text-right">₺${formatCurrency(item.hungerLimit)}</td>
-            <td class="py-4 px-4 text-sm text-orange-500 font-medium text-right">₺${formatCurrency(item.povertyLimit)}</td>
+            <td class="py-4 px-2 sm:px-4 text-xs sm:text-sm font-medium">${item.month} ${item.year}</td>
+            <td class="py-4 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-right">₺${formatCurrency(item.minWage)}</td>
+            <td class="py-4 px-2 sm:px-4 text-xs sm:text-sm text-red-500 font-medium text-right">₺${formatCurrency(item.hungerLimit)}</td>
+            <td class="py-4 px-2 sm:px-4 text-xs sm:text-sm text-orange-500 font-medium text-right">₺${formatCurrency(item.povertyLimit)}</td>
         </tr>
     `).join('');
 
