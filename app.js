@@ -23,7 +23,7 @@ function createSalaryCardHTML(data) {
                 <div class="mt-6 pt-5 border-t border-white/20 flex flex-col sm:flex-row gap-8">
                     <div>
                         <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Açlık Sınırı (Kasım 2025)</p>
-                        <p class="text-2xl font-bold text-red-400">₺${formatCurrency(data.hungerLimit)}</p>
+                        <p class="text-2xl font-bold text-red-300">₺${formatCurrency(data.hungerLimit)}</p>
                     </div>
                     <div>
                         <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Yoksulluk Sınırı (Kasım 2025)</p>
@@ -49,7 +49,7 @@ function createSalaryCardHTML(data) {
                         <span class="material-symbols-outlined">analytics</span>
                         <span class="text-sm font-medium">Enflasyon Oranı</span>
                     </div>
-                    <p class="text-2xl font-bold text-red-400">%${formatNumber(data.inflationRate, 2)}</p>
+                    <p class="text-2xl font-bold text-red-300">%${formatNumber(data.inflationRate, 2)}</p>
                     <p class="text-xs text-blue-200">2025 yıllık</p>
                 </div>
             </div>
@@ -424,7 +424,7 @@ function renderApp() {
 
     // Update last updated text
     if (lastUpdatedEl) {
-        lastUpdatedEl.textContent = `Son piyasa güncellemesi: ${salaryData.lastUpdated}`;
+        lastUpdatedEl.textContent = `Son veri güncellemesi: ${salaryData.lastUpdated}`;
     }
 
     // Render salary card
