@@ -11,7 +11,7 @@ const salaryData = {
 
 const products = [
     { name: "Ekmek", icon: "bakery_dining", unitPrice: 15.00, unitName: "Adet", description: "Standart 200gr", color: "orange" },
-    { name: "Kırmızı Et", icon: "restaurant", unitPrice: 689, unitName: "Kg", description: "Ortalama Market Fiyatı", color: "rose" },
-    { name: "Gram Altın", icon: "savings", unitPrice: 6056, unitName: "Gr.", description: "24 Ayar Has Altın", color: "yellow" },
+    { name: "Dana Kıyma", icon: "restaurant", unitPrice: 689, unitName: "Kg", description: "Ortalama Market Fiyatı", color: "rose" },
+    { name: "Gram Altın", icon: "savings", unitPrice: 5963, unitName: "Gr.", description: "24 Ayar Has Altın", color: "yellow" },
     { name: "ABD Doları", icon: "attach_money", unitPrice: 42.93, unitName: "$", description: "Döviz Karşılığı", color: "green", prefix: true }
 ];
