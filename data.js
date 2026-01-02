@@ -6,12 +6,12 @@ const salaryData = {
     inflationRate: 57.00,
     hungerLimit: 29827.78,
     povertyLimit: 97158.89,
-    lastUpdated: "30 Aralık 2025"
+    B.01.2026 15:42"
 };
 
 const products = [
     { name: "Ekmek", icon: "bakery_dining", unitPrice: 15.00, unitName: "Adet", description: "Standart 200gr", color: "orange" },
     { name: "Dana Kıyma", icon: "restaurant", unitPrice: 689, unitName: "Kg", description: "Ortalama Market Fiyatı", color: "rose" },
     { name: "Gram Altın", icon: "savings", unitPrice: 5963, unitName: "Gr.", description: "24 Ayar Has Altın", color: "yellow" },
-    { name: "ABD Doları", icon: "attach_money", unitPrice: 42.93, unitName: "$", description: "Döviz Karşılığı", color: "green", prefix: true }
+    b.92, unitName: "$", description: "Döviz Karşılığı", color: "green", prefix: true }
 ];
