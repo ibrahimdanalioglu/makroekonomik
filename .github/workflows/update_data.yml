@@ -1,5 +1,9 @@
 name: Güncel Verileri Çek ve Yayınla
 
+
+permissions:
+  contents: write
+
 on:
   schedule:
     # Her gün Türkiye saati ile yaklaşık 10:30 ve 18:30'da (07:30 ve 15:30 UTC) çalışır
