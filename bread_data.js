@@ -1,0 +1,20 @@
+const breadData = [
+    { "date": "2016", "price": 1.25, "gram": 250, "minimum_wage": 1300.99 },
+    { "date": "2017", "price": 1.25, "gram": 250, "minimum_wage": 1404.06 },
+    { "date": "2018", "price": 1.25, "gram": 250, "minimum_wage": 1603.12 },
+    { "date": "2019", "price": 1.25, "gram": 250, "minimum_wage": 2020.90 },
+    { "date": "2020 Ocak-Eylül", "price": 1.25, "gram": 200, "minimum_wage": 2324.71 },
+    { "date": "2020 Ekim", "price": 1.50, "gram": 200, "minimum_wage": 2324.71 },
+    { "date": "2021 Ocak-Mart", "price": 1.50, "gram": 200, "minimum_wage": 2825.90 },
+    { "date": "2021 Nisan-Ekim", "price": 2.00, "gram": 220, "minimum_wage": 2825.90 },
+    { "date": "2021 Kasım", "price": 2.50, "gram": 230, "minimum_wage": 2825.90 },
+    { "date": "2022 Mart", "price": 3.00, "gram": 210, "minimum_wage": 4253.40 },
+    { "date": "2022 Temmuz", "price": 4.00, "gram": 210, "minimum_wage": 5500.35 },
+    { "date": "2023 Ocak-Haziran", "price": 4.00, "gram": 210, "minimum_wage": 8506.80 },
+    { "date": "2023 Temmuz-Kasım", "price": 4.00, "gram": 210, "minimum_wage": 11402.32 },
+    { "date": "2023 Aralık", "price": 8.00, "gram": 210, "minimum_wage": 11402.32 },
+    { "date": "2024 Haziran", "price": 10.00, "gram": 200, "minimum_wage": 17002.12 },
+    { "date": "2025 Ocak", "price": 12.50, "gram": 200, "minimum_wage": 22104.67 },
+    { "date": "2025 Ağustos", "price": 15.00, "gram": 200, "minimum_wage": 22104.67 },
+    { "date": "2026 Ocak", "price": 15.00, "gram": 200, "minimum_wage": 28075.50 }
+];

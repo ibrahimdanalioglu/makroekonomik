@@ -3,10 +3,16 @@ const formatCurrency = (value) => value.toLocaleString('tr-TR', { minimumFractio
 
 // Global variable for bread modal chart
 let breadModalChartInstance = null;
+// Global variable for inflation view chart
+let inflationChartInstance = null;
+// Global variable for limits view chart
+let limitsChartInstance = null;
 
 // Utility function for generic number formatting (Turkish style)
-const formatNumber = (value, fractionDigits = 0) =>
-    value.toLocaleString('tr-TR', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+const formatNumber = (value, fractionDigits = 0) => {
+    if (value === null || value === undefined) return null;
+    return value.toLocaleString('tr-TR', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+};
 
 // Function to create the HTML for the salary card
 function createSalaryCardHTML(data) {
@@ -30,10 +36,7 @@ function createSalaryCardHTML(data) {
                         <p class="text-2xl font-bold text-white">₺${formatNumber(data.povertyLimit, 2)}</p>
                     </div>
                 </div>
-                <button onclick="openLimitsModal()" class="mt-4 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-200 hover:text-white transition-colors animate-pulse">
-                    <span class="material-symbols-outlined text-xs">info</span>
-                    <span>Geçmiş Veriler ve Detaylar için tıklayınız</span>
-                </button>
+
             </div>
             <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 flex-1 min-w-[140px]">
@@ -100,7 +103,7 @@ function openBreadModal() {
     const modal = document.getElementById('bread-modal');
     const tableBody = document.getElementById('bread-table-body');
 
-    const tableRows = historicalData.bread.map(b => {
+    const tableRows = breadData.map(b => {
         const minWage = b.minimum_wage;
         const breadPrice = b.price;
         const quantity = minWage / breadPrice;
@@ -171,7 +174,7 @@ function renderBreadModalChart() {
         breadModalChartInstance.destroy();
     }
 
-    const data = historicalData.bread.map(b => ({
+    const data = breadData.map(b => ({
         date: b.date,
         quantity: b.minimum_wage / b.price
     }));
@@ -232,10 +235,10 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
-// Function to open limits history modal
-function openLimitsModal() {
-    const modal = document.getElementById('limits-modal');
+// Function to render limits view (Table and Chart)
+function renderLimitsView() {
     const tableBody = document.getElementById('limits-table-body');
+    if (!tableBody) return;
 
     // Month mapping for sorting
     const monthMap = {
@@ -243,36 +246,23 @@ function openLimitsModal() {
         'Temmuz': 7, 'Ağustos': 8, 'Eylül': 9, 'Ekim': 10, 'Kasım': 11, 'Aralık': 12
     };
 
-    const sortedLimits = [...historicalData.limits].sort((a, b) => {
+    const sortedLimits = [...limitsData].sort((a, b) => {
         if (b.year !== a.year) return b.year - a.year;
         return monthMap[b.month] - monthMap[a.month];
     });
 
     const tableRows = sortedLimits.map(item => `
         <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
-            <td class="py-4 px-2 sm:px-4 text-[11px] sm:text-sm font-medium text-left">${item.month} ${item.year}</td>
-            <td class="py-4 px-2 sm:px-4 text-[11px] sm:text-sm font-semibold text-right">₺${formatCurrency(item.minWage)}</td>
-            <td class="py-4 px-2 sm:px-4 text-[11px] sm:text-sm text-red-500 font-medium text-right">₺${formatCurrency(item.hungerLimit)}</td>
-            <td class="py-4 px-2 sm:px-4 text-[11px] sm:text-sm text-orange-500 font-medium text-right">₺${formatCurrency(item.povertyLimit)}</td>
+            <td class="py-4 px-4 text-sm font-medium text-left align-middle">${item.month} ${item.year}</td>
+            <td class="py-4 px-4 text-sm font-semibold text-right align-middle text-text-main-light dark:text-text-main-dark">₺${formatCurrency(item.minWage)}</td>
+            <td class="py-4 px-4 text-sm font-medium text-right align-middle text-red-500">₺${formatCurrency(item.hungerLimit)}</td>
+            <td class="py-4 px-4 text-sm font-medium text-right align-middle text-orange-500">₺${formatCurrency(item.povertyLimit)}</td>
         </tr>
     `).join('');
 
     tableBody.innerHTML = tableRows;
 
-    // Reset view to table
-    const tableContainer = document.getElementById('limits-table-container');
-    const chartContainer = document.getElementById('limits-chart-container');
-    const toggleBtn = document.getElementById('toggle-limits-view');
-
-    if (tableContainer) tableContainer.classList.remove('hidden');
-    if (chartContainer) chartContainer.classList.add('hidden');
-    if (toggleBtn) {
-        toggleBtn.querySelector('span:last-child').textContent = 'Grafiği Göster';
-        toggleBtn.querySelector('.material-symbols-outlined').textContent = 'show_chart';
-    }
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Prevent scroll
+    renderLimitsChart();
 }
 
 // Function to toggle between table and chart in limits modal
@@ -292,20 +282,22 @@ function toggleLimitsView() {
         chartContainer.classList.remove('hidden');
         toggleBtn.querySelector('span:last-child').textContent = 'Tabloyu Göster';
         toggleBtn.querySelector('.material-symbols-outlined').textContent = 'table_rows';
-        renderLimitsModalChart();
+        renderLimitsChart();
     }
 }
 
-// Function to render chart in limits modal
-function renderLimitsModalChart() {
-    const ctx = document.getElementById('limitsModalChart').getContext('2d');
+// Function to render chart in limits section
+function renderLimitsChart() {
+    const ctxElement = document.getElementById('limitsChart');
+    if (!ctxElement) return; // Guard clause if element doesn't exist
+    const ctx = ctxElement.getContext('2d');
 
-    if (limitsModalChartInstance) {
-        limitsModalChartInstance.destroy();
+    if (limitsChartInstance) {
+        limitsChartInstance.destroy();
     }
 
     // Data for limits chart (Newest last for line chart progression)
-    const sortedData = [...historicalData.limits].sort((a, b) => {
+    const sortedData = [...limitsData].sort((a, b) => {
         if (a.year !== b.year) return a.year - b.year;
         const monthMap = {
             'Ocak': 1, 'Şubat': 2, 'Mart': 3, 'Nisan': 4, 'Mayıs': 5, 'Haziran': 6,
@@ -380,6 +372,139 @@ function renderLimitsModalChart() {
     });
 }
 
+// Function to render inflation view
+async function renderInflationView() {
+    try {
+        // Use global variable from inflation_data.js to avoid CORS issues with file:// protocol
+        const data = typeof inflationData !== 'undefined' ? inflationData : [];
+        if (data.length === 0) {
+            console.error('Inflation data lookup failed. Make sure inflation_data.js is loaded.');
+        }
+
+        // Table Data (Show as is - Newest First)
+        const tableBody = document.getElementById('inflation-table-body');
+        if (tableBody) {
+            tableBody.innerHTML = data.map(item => {
+                const enagMonthly = formatNumber(item["Enag Aylık Tüfe"], 2);
+                const tuikMonthly = formatNumber(item["Tüik Aylık Tüfe"], 2);
+                const enagAnnual = formatNumber(item["Enag Yıllık Tüfe"], 2);
+                const tuikAnnual = formatNumber(item["Tüik Yıllık Tüfe"], 2);
+
+                return `
+                <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
+                    <td class="py-4 px-4 text-sm font-medium text-left align-middle">${item.Tarih}</td>
+                    <td class="py-4 px-4 text-sm text-center align-middle text-text-secondary-light dark:text-text-secondary-dark">${enagMonthly ? enagMonthly + '%' : '-'}</td>
+                    <td class="py-4 px-4 text-sm text-center align-middle text-text-secondary-light dark:text-text-secondary-dark">${tuikMonthly ? tuikMonthly + '%' : '-'}</td>
+                    <td class="py-4 px-4 text-sm text-center align-middle font-semibold text-text-main-light dark:text-text-main-dark">${enagAnnual ? enagAnnual + '%' : '-'}</td>
+                    <td class="py-4 px-4 text-sm text-center align-middle font-semibold text-text-main-light dark:text-text-main-dark">${tuikAnnual ? tuikAnnual + '%' : '-'}</td>
+                </tr>
+            `}).join('');
+        }
+
+        renderInflationChart(data);
+
+    } catch (error) {
+        console.error('Error loading inflation data:', error);
+    }
+}
+
+// Function to render inflation chart
+function renderInflationChart(data) {
+    const ctx = document.getElementById('inflationChart');
+    if (!ctx) return;
+
+    if (inflationChartInstance) {
+        inflationChartInstance.destroy();
+    }
+
+    // Prepare data for chart (Oldest First for timeline)
+    // Filter out entries where both annual rates are null if desired, or keep them to show gaps
+    // The source data is Newest First, so reverse it
+    const chartData = [...data].reverse().filter(item => item["Tüik Yıllık Tüfe"] !== null || item["Enag Yıllık Tüfe"] !== null);
+
+    inflationChartInstance = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: chartData.map(d => d.Tarih),
+            datasets: [
+                {
+                    label: 'TÜİK Yıllık',
+                    data: chartData.map(d => d["Tüik Yıllık Tüfe"]),
+                    borderColor: '#2b6cee', // Primary Blue
+                    backgroundColor: 'rgba(43, 108, 238, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'ENAG Yıllık',
+                    data: chartData.map(d => d["Enag Yıllık Tüfe"]),
+                    borderColor: '#ef4444', // Red
+                    backgroundColor: 'transparent',
+                    borderWidth: 3,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#4c669a' }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleColor: '#f8fafc',
+                    bodyColor: '#f8fafc',
+                    padding: 12,
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: (context) => {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += '%' + formatNumber(context.parsed.y, 2);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b',
+                        maxRotation: 45,
+                        minRotation: 45,
+                        autoSkip: true,
+                        maxTicksLimit: 20
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Main function to render the application
 function renderApp() {
     // Get DOM elements
@@ -392,35 +517,7 @@ function renderApp() {
         closeModalBtn.onclick = closeModal;
     }
 
-    const closeLimitsModalBtn = document.getElementById('close-limits-modal');
-    if (closeLimitsModalBtn) {
-        closeLimitsModalBtn.onclick = closeModal;
-    }
 
-    const toggleBreadViewBtn = document.getElementById('toggle-bread-view');
-    if (toggleBreadViewBtn) {
-        toggleBreadViewBtn.onclick = toggleBreadView;
-    }
-
-    const toggleLimitsViewBtn = document.getElementById('toggle-limits-view');
-    if (toggleLimitsViewBtn) {
-        toggleLimitsViewBtn.onclick = toggleLimitsView;
-    }
-
-    // Close on backdrop click
-    const breadModal = document.getElementById('bread-modal');
-    if (breadModal) {
-        breadModal.onclick = (e) => {
-            if (e.target === breadModal.firstElementChild) closeModal();
-        };
-    }
-
-    const limitsModal = document.getElementById('limits-modal');
-    if (limitsModal) {
-        limitsModal.onclick = (e) => {
-            if (e.target === limitsModal.firstElementChild) closeModal();
-        };
-    }
 
 
 
@@ -430,7 +527,7 @@ function renderApp() {
         'Temmuz': 7, 'Ağustos': 8, 'Eylül': 9, 'Ekim': 10, 'Kasım': 11, 'Aralık': 12
     };
 
-    const sortedLimits = [...historicalData.limits].sort((a, b) => {
+    const sortedLimits = [...limitsData].sort((a, b) => {
         if (b.year !== a.year) return b.year - a.year;
         return monthMap[b.month] - monthMap[a.month];
     });
@@ -454,6 +551,29 @@ function renderApp() {
         productGridEl.innerHTML = products.map(product => createProductCardHTML(product, salaryData.net)).join('');
     }
 
+
+    // Setup Scroll to Top Button
+    const scrollTopBtn = document.getElementById('scroll-to-top');
+    if (scrollTopBtn) {
+        // Toggle visibility based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove('opacity-0', 'invisible');
+                scrollTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'invisible');
+                scrollTopBtn.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        // Smooth scroll to top on click
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 }
 
 // Routing Logic
@@ -465,9 +585,20 @@ function handleRoute() {
     // Default: hide all views
     if (landingView) landingView.classList.add('hidden');
     if (minWageView) minWageView.classList.add('hidden');
+    const inflationView = document.getElementById('inflation-view');
+    if (inflationView) inflationView.classList.add('hidden');
 
     if (hash === '#/min-wage') {
         if (minWageView) minWageView.classList.remove('hidden');
+        renderLimitsView(); // Render limits chart and table
+        window.scrollTo(0, 0);
+    } else if (hash === '#/inflation') { // Handle Inflation Route
+        if (inflationView) {
+            inflationView.classList.remove('hidden');
+
+
+            renderInflationView(); // Fetch and render data
+        }
         window.scrollTo(0, 0);
     } else {
         // Default to landing page
