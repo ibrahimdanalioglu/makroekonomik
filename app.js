@@ -22,11 +22,11 @@ function createSalaryCardHTML(data) {
                 <p class="text-blue-100 mt-2 text-sm leading-snug">Brüt: ₺${formatCurrency(data.gross)} <span class="hidden sm:inline">•</span> <br class="sm:hidden"> İşverene Maliyeti: ₺${formatCurrency(data.costToEmployer)}</p>
                 <div class="mt-6 pt-5 border-t border-white/20 flex flex-col sm:flex-row gap-8">
                     <div>
-                        <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Açlık Sınırı (Kasım 2025)</p>
+                        <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Açlık Sınırı (${data.limitDate || 'Güncel'})</p>
                         <p class="text-2xl font-bold text-red-300">₺${formatCurrency(data.hungerLimit)}</p>
                     </div>
                     <div>
-                        <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Yoksulluk Sınırı (Kasım 2025)</p>
+                        <p class="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1 opacity-90">Yoksulluk Sınırı (${data.limitDate || 'Güncel'})</p>
                         <p class="text-2xl font-bold text-white">₺${formatNumber(data.povertyLimit, 2)}</p>
                     </div>
                 </div>
@@ -425,6 +425,26 @@ function renderApp() {
     // Update last updated text
     if (lastUpdatedEl) {
         lastUpdatedEl.textContent = `Son veri güncellemesi: ${salaryData.lastUpdated}`;
+    }
+
+    // Get latest limits data
+    const monthMap = {
+        'Ocak': 1, 'Şubat': 2, 'Mart': 3, 'Nisan': 4, 'Mayıs': 5, 'Haziran': 6,
+        'Temmuz': 7, 'Ağustos': 8, 'Eylül': 9, 'Ekim': 10, 'Kasım': 11, 'Aralık': 12
+    };
+
+    const sortedLimits = [...historicalData.limits].sort((a, b) => {
+        if (b.year !== a.year) return b.year - a.year;
+        return monthMap[b.month] - monthMap[a.month];
+    });
+
+    const latestLimit = sortedLimits[0];
+
+    // Update salaryData with latest limits
+    if (latestLimit) {
+        salaryData.hungerLimit = latestLimit.hungerLimit;
+        salaryData.povertyLimit = latestLimit.povertyLimit;
+        salaryData.limitDate = `${latestLimit.month} ${latestLimit.year}`;
     }
 
     // Render salary card
