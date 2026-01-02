@@ -422,10 +422,7 @@ function renderApp() {
         };
     }
 
-    // Update last updated text
-    if (lastUpdatedEl) {
-        lastUpdatedEl.textContent = `Son veri güncellemesi: ${salaryData.lastUpdated}`;
-    }
+
 
     // Get latest limits data
     const monthMap = {
