@@ -7,6 +7,8 @@ let breadModalChartInstance = null;
 let inflationChartInstance = null;
 // Global variable for limits view chart
 let limitsChartInstance = null;
+// Global variable for exchange view chart
+let exchangeChartInstance = null;
 
 // Utility function for generic number formatting (Turkish style)
 const formatNumber = (value, fractionDigits = 0) => {
@@ -503,7 +505,249 @@ function renderInflationChart(data) {
     });
 }
 
-// Main function to render the application
+// Function to render exchange view
+function renderExchangeView(period = '1Y') {
+    // Check if data exists
+    if (typeof exchangeData === 'undefined' || !exchangeData.usd || !exchangeData.eur) {
+        console.error('Exchange data missing');
+        return;
+    }
+
+    // Filter Data based on period
+    const now = new Date();
+    let cutoffDate = new Date();
+
+    switch (period) {
+        case '1W': cutoffDate.setDate(now.getDate() - 7); break;
+        case '1M': cutoffDate.setMonth(now.getMonth() - 1); break;
+        case '3M': cutoffDate.setMonth(now.getMonth() - 3); break;
+        case '6M': cutoffDate.setMonth(now.getMonth() - 6); break;
+        case '1Y': cutoffDate.setFullYear(now.getFullYear() - 1); break;
+        case 'ALL': cutoffDate = new Date(0); break; // All time
+        default: cutoffDate.setFullYear(now.getFullYear() - 1);
+    }
+
+    // Helper to filter array
+    const filterByDate = (arr) => arr.filter(item => new Date(item.Tarih) >= cutoffDate);
+
+    const filteredUSD = filterByDate(exchangeData.usd);
+    const filteredEUR = filterByDate(exchangeData.eur);
+
+    // Update Buttons State
+    document.querySelectorAll('.exchange-filter-btn').forEach(btn => {
+        if (btn.dataset.period === period) {
+            btn.classList.add('bg-primary', 'text-white', 'border-primary');
+            btn.classList.remove('bg-background-light', 'dark:bg-background-dark', 'text-text-secondary-light', 'dark:text-text-secondary-dark');
+        } else {
+            btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+            btn.classList.add('bg-background-light', 'dark:bg-background-dark', 'text-text-secondary-light', 'dark:text-text-secondary-dark');
+        }
+    });
+
+    // Render Chart
+    renderExchangeChart(filteredUSD, filteredEUR);
+
+    // Render Table (Tabs logic handles which data to show, default USD)
+    // We need to pass the full filtered sets to the table renderer so strictly speaking we might need to store them globally or pass them effectively.
+    // For simplicity, let's store filtered data globally or in a scope accessible by the table renderer, OR re-filter in table renderer.
+    // Better approach: Pass the currently selected currency to the renderer.
+
+    // Store filtered data for table usage
+    window.filteredExchangeData = { usd: filteredUSD, eur: filteredEUR };
+
+    // Get current selected tab currency
+    const currentTab = document.querySelector('.exchange-tab-btn.bg-white')?.dataset.currency ||
+        document.querySelector('.exchange-tab-btn.bg-surface-dark')?.dataset.currency ||
+        'usd'; // Default
+
+    renderExchangeTable(currentTab);
+
+    // Setup Filters (only once)
+    setupExchangeFilters();
+    setupExchangeTableTabs();
+}
+
+// Function to render exchange chart
+function renderExchangeChart(usdData, eurData) {
+    const ctx = document.getElementById('exchangeChart');
+    if (!ctx) return;
+
+    if (exchangeChartInstance) {
+        exchangeChartInstance.destroy();
+    }
+
+    // Prepare data (Chronological order for chart)
+    const sortedUSD = [...usdData].sort((a, b) => new Date(a.Tarih) - new Date(b.Tarih));
+    const sortedEUR = [...eurData].sort((a, b) => new Date(a.Tarih) - new Date(b.Tarih));
+
+    // Get unique labels from both datasets
+    const allDates = new Set([...sortedUSD.map(d => d.Tarih), ...sortedEUR.map(d => d.Tarih)]);
+    const labels = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
+
+    // Map data to labels (fill missing with null)
+    const usdValues = labels.map(date => {
+        const item = sortedUSD.find(d => d.Tarih === date);
+        return item ? item['Efektif Satış'] : null;
+    });
+
+    const eurValues = labels.map(date => {
+        const item = sortedEUR.find(d => d.Tarih === date);
+        return item ? item['Efektif Satış'] : null;
+    });
+
+    exchangeChartInstance = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'USD Satış',
+                    data: usdValues,
+                    borderColor: '#22c55e', // Green
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.1,
+                    fill: false
+                },
+                {
+                    label: 'EUR Satış',
+                    data: eurValues,
+                    borderColor: '#3b82f6', // Blue
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.1,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#4c669a' }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleColor: '#f8fafc',
+                    bodyColor: '#f8fafc',
+                    padding: 12,
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: (context) => {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += '₺' + formatNumber(context.parsed.y, 2);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b',
+                        maxRotation: 45,
+                        minRotation: 45,
+                        autoSkip: true,
+                        maxTicksLimit: 12
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Function to render exchange table based on selected currency
+function renderExchangeTable(currency) {
+    const tableBody = document.getElementById('exchange-table-body');
+    if (!tableBody || !window.filteredExchangeData) return;
+
+    const data = window.filteredExchangeData[currency];
+    if (!data) return;
+
+    // Sort by date descending
+    const sortedData = [...data].sort((a, b) => new Date(b.Tarih) - new Date(a.Tarih));
+
+    tableBody.innerHTML = sortedData.map(item => {
+        const buy = formatNumber(item['Efektif Alış'], 2);
+        const sell = formatNumber(item['Efektif Satış'], 2);
+        const colorClass = currency === 'usd' ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400';
+
+        return `
+            <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
+                <td class="py-3 px-4 text-sm font-medium text-left align-middle text-text-main-light dark:text-text-main-dark">${item.Tarih}</td>
+                <td class="py-3 px-4 text-sm text-right align-middle text-text-secondary-light dark:text-text-secondary-dark">₺${buy}</td>
+                <td class="py-3 px-4 text-sm text-right align-middle font-bold ${colorClass}">₺${sell}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Setup listeners for exchange table tabs
+let tableTabsSetup = false;
+function setupExchangeTableTabs() {
+    if (tableTabsSetup) return;
+    const tabsContainer = document.getElementById('exchange-table-tabs');
+    if (tabsContainer) {
+        tabsContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const currency = e.target.dataset.currency;
+
+                // Update active state
+                document.querySelectorAll('.exchange-tab-btn').forEach(btn => {
+                    if (btn.dataset.currency === currency) {
+                        btn.classList.add('bg-white', 'dark:bg-surface-dark', 'text-primary', 'shadow-sm');
+                        btn.classList.remove('text-text-secondary-light', 'dark:text-text-secondary-dark');
+                    } else {
+                        btn.classList.remove('bg-white', 'dark:bg-surface-dark', 'text-primary', 'shadow-sm');
+                        btn.classList.add('text-text-secondary-light', 'dark:text-text-secondary-dark');
+                    }
+                });
+
+                renderExchangeTable(currency);
+            }
+        });
+        tableTabsSetup = true;
+    }
+}
+
+// Setup listeners for exchange filters
+let filtersSetup = false;
+function setupExchangeFilters() {
+    if (filtersSetup) return;
+    const filterContainer = document.getElementById('exchange-filters');
+    if (filterContainer) {
+        filterContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const period = e.target.dataset.period;
+                renderExchangeView(period);
+            }
+        });
+        filtersSetup = true;
+    }
+}
+
 function renderApp() {
     // Get DOM elements
     const lastUpdatedEl = document.getElementById('last-updated');
@@ -585,6 +829,8 @@ function handleRoute() {
     if (minWageView) minWageView.classList.add('hidden');
     const inflationView = document.getElementById('inflation-view');
     if (inflationView) inflationView.classList.add('hidden');
+    const exchangeView = document.getElementById('exchange-view');
+    if (exchangeView) exchangeView.classList.add('hidden');
 
     if (hash === '#/min-wage') {
         if (minWageView) minWageView.classList.remove('hidden');
@@ -596,6 +842,13 @@ function handleRoute() {
 
 
             renderInflationView(); // Fetch and render data
+        }
+        window.scrollTo(0, 0);
+    } else if (hash === '#/exchange') { // Handle Exchange Route
+        const exchangeView = document.getElementById('exchange-view');
+        if (exchangeView) {
+            exchangeView.classList.remove('hidden');
+            renderExchangeView(); // Default renders 1 Year
         }
         window.scrollTo(0, 0);
     } else {
