@@ -225,10 +225,8 @@ function renderBreadModalChart() {
     });
 }
 
-// Global variable for limits modal chart
-let limitsModalChartInstance = null;
-
 // Function to close modal
+
 function closeModal() {
     const modals = [document.getElementById('bread-modal'), document.getElementById('limits-modal')];
     modals.forEach(m => m && m.classList.add('hidden'));
@@ -306,7 +304,7 @@ function renderLimitsChart() {
         return monthMap[a.month] - monthMap[b.month];
     });
 
-    limitsModalChartInstance = new Chart(ctx, {
+    limitsChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
             labels: sortedData.map(d => `${d.month} ${d.year}`),
