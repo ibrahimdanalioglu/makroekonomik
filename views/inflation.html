@@ -1,0 +1,71 @@
+<div class="animate-fade-in">
+    <div class="flex flex-col gap-6 mb-8">
+        <div class="flex flex-col gap-2 max-w-2xl">
+            <div class="flex items-center gap-2 mb-2">
+                <a href="#/"
+                    class="flex items-center gap-1 text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-base">arrow_back</span>
+                    <span>Ana Sayfa</span>
+                </a>
+            </div>
+            <h1
+                class="text-4xl md:text-5xl font-black leading-tight tracking-tight text-text-main-light dark:text-text-main-dark">
+                Enflasyon Verileri</h1>
+            <p class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-relaxed">
+                TÜİK ve ENAG tarafından açıklanan aylık ve yıllık enflasyon (TÜFE) oranlarının detaylı
+                karşılaştırması ve tarihsel değişimi.
+            </p>
+        </div>
+    </div>
+
+    <!-- Inflation Chart Section -->
+    <div
+        class="mb-10 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <h2 class="text-xl font-bold text-text-main-light dark:text-text-main-dark flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">monitoring</span>
+                Yıllık Enflasyon Karşılaştırması
+            </h2>
+        </div>
+        <div class="h-[300px] md:h-[400px] w-full">
+            <canvas id="inflationChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Inflation Table Section -->
+    <div
+        class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden shadow-sm">
+        <div class="p-6 border-b border-border-light dark:border-border-dark">
+            <h2 class="text-xl font-bold text-text-main-light dark:text-text-main-dark flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">table_chart</span>
+                Geçmiş Dönem Verileri
+            </h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-background-light dark:bg-background-dark">
+                    <tr>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark align-middle">
+                            Dönem</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-center align-middle">
+                            ENAG Aylık</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-center align-middle">
+                            TÜİK Aylık</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-center align-middle">
+                            ENAG Yıllık</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-center align-middle">
+                            TÜİK Yıllık</th>
+                    </tr>
+                </thead>
+                <tbody id="inflation-table-body">
+                    <!-- Content will be injected -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

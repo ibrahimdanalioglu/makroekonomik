@@ -35,7 +35,7 @@ def fetch_latest_usd():
         return None
 
 def update_data_js(usd_price):
-    file_path = 'data.js'
+    file_path = 'data/data.js'
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()

@@ -36,6 +36,6 @@ jobs:
         run: |
           git config --local user.name 'github-actions[bot]'
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data.js
+          git add data/data.js
           # Eğer fiyatlar değişmemişse hata vermemesi için kontrol ekliyoruz
           git diff --quiet && git diff --staged --quiet || (git commit -m "Otomatik veri güncellemesi: $(date +'%d.%m.%Y %H:%M')" && git push)

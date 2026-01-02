@@ -748,20 +748,42 @@ function setupExchangeFilters() {
     }
 }
 
-function renderApp() {
-    // Get DOM elements
-    const lastUpdatedEl = document.getElementById('last-updated');
-    const salaryCardEl = document.getElementById('min-wage-card');
-    const productGridEl = document.getElementById('product-grid');
+// Setup Global Listeners (Scroll to top, etc.)
+function initGlobal() {
     // Close buttons
     const closeModalBtn = document.getElementById('close-modal');
     if (closeModalBtn) {
         closeModalBtn.onclick = closeModal;
     }
 
+    // Setup Scroll to Top Button
+    const scrollTopBtn = document.getElementById('scroll-to-top');
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove('opacity-0', 'invisible');
+                scrollTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'invisible');
+                scrollTopBtn.classList.remove('opacity-100', 'visible');
+            }
+        });
 
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+}
 
+// Function to render Min Wage View Specifics (Cards, Grid)
+function initMinWageView() {
+    const salaryCardEl = document.getElementById('min-wage-card');
+    const productGridEl = document.getElementById('product-grid');
 
+    if (!salaryCardEl && !productGridEl) return;
 
     // Get latest limits data
     const monthMap = {
@@ -793,74 +815,58 @@ function renderApp() {
         productGridEl.innerHTML = products.map(product => createProductCardHTML(product, salaryData.net)).join('');
     }
 
+    renderLimitsView();
+}
 
-    // Setup Scroll to Top Button
-    const scrollTopBtn = document.getElementById('scroll-to-top');
-    if (scrollTopBtn) {
-        // Toggle visibility based on scroll position
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollTopBtn.classList.remove('opacity-0', 'invisible');
-                scrollTopBtn.classList.add('opacity-100', 'visible');
-            } else {
-                scrollTopBtn.classList.add('opacity-0', 'invisible');
-                scrollTopBtn.classList.remove('opacity-100', 'visible');
-            }
-        });
+// Routing Logic
+const viewCache = {};
 
-        // Smooth scroll to top on click
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
+async function loadView(viewName) {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    if (viewCache[viewName]) {
+        mainContent.innerHTML = viewCache[viewName];
+        return;
+    }
+
+    try {
+        const response = await fetch(`views/${viewName}.html`);
+        if (!response.ok) throw new Error('View not found');
+        const html = await response.text();
+        viewCache[viewName] = html;
+        mainContent.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading view:', error);
+        mainContent.innerHTML = `<div class="p-8 text-center">
+            <h2 class="text-xl font-bold text-red-500 mb-2">Sayfa Yüklenemedi</h2>
+            <p class="text-text-secondary-light dark:text-text-secondary-dark">Bu uygulamanın düzgün çalışması için bir sunucu üzerinde çalıştırılması gerekir (Örn: Live Server).</p>
+        </div>`;
     }
 }
 
 // Routing Logic
-function handleRoute() {
+async function handleRoute() {
     const hash = window.location.hash || '#/';
-    const landingView = document.getElementById('landing-view');
-    const minWageView = document.getElementById('min-wage-view');
-
-    // Default: hide all views
-    if (landingView) landingView.classList.add('hidden');
-    if (minWageView) minWageView.classList.add('hidden');
-    const inflationView = document.getElementById('inflation-view');
-    if (inflationView) inflationView.classList.add('hidden');
-    const exchangeView = document.getElementById('exchange-view');
-    if (exchangeView) exchangeView.classList.add('hidden');
 
     if (hash === '#/min-wage') {
-        if (minWageView) minWageView.classList.remove('hidden');
-        renderLimitsView(); // Render limits chart and table
-        window.scrollTo(0, 0);
-    } else if (hash === '#/inflation') { // Handle Inflation Route
-        if (inflationView) {
-            inflationView.classList.remove('hidden');
-
-
-            renderInflationView(); // Fetch and render data
-        }
-        window.scrollTo(0, 0);
-    } else if (hash === '#/exchange') { // Handle Exchange Route
-        const exchangeView = document.getElementById('exchange-view');
-        if (exchangeView) {
-            exchangeView.classList.remove('hidden');
-            renderExchangeView(); // Default renders 1 Year
-        }
-        window.scrollTo(0, 0);
+        await loadView('min-wage');
+        initMinWageView();
+    } else if (hash === '#/inflation') {
+        await loadView('inflation');
+        renderInflationView();
+    } else if (hash === '#/exchange') {
+        await loadView('exchange');
+        renderExchangeView();
     } else {
-        // Default to landing page
-        if (landingView) landingView.classList.remove('hidden');
-        window.scrollTo(0, 0);
+        await loadView('landing');
     }
+    window.scrollTo(0, 0);
 }
 
 // Run the app after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-    renderApp();
-    handleRoute(); // Initial route check
+    initGlobal();
+    handleRoute();
     window.addEventListener('hashchange', handleRoute);
 });
