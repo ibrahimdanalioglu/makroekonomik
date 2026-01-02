@@ -384,7 +384,7 @@ function renderLimitsModalChart() {
 function renderApp() {
     // Get DOM elements
     const lastUpdatedEl = document.getElementById('last-updated');
-    const salaryCardEl = document.getElementById('salary-card');
+    const salaryCardEl = document.getElementById('min-wage-card');
     const productGridEl = document.getElementById('product-grid');
     // Close buttons
     const closeModalBtn = document.getElementById('close-modal');
@@ -439,5 +439,29 @@ function renderApp() {
 
 }
 
+// Routing Logic
+function handleRoute() {
+    const hash = window.location.hash || '#/';
+    const landingView = document.getElementById('landing-view');
+    const minWageView = document.getElementById('min-wage-view');
+
+    // Default: hide all views
+    if (landingView) landingView.classList.add('hidden');
+    if (minWageView) minWageView.classList.add('hidden');
+
+    if (hash === '#/min-wage') {
+        if (minWageView) minWageView.classList.remove('hidden');
+        window.scrollTo(0, 0);
+    } else {
+        // Default to landing page
+        if (landingView) landingView.classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+}
+
 // Run the app after the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', renderApp);
+document.addEventListener('DOMContentLoaded', () => {
+    renderApp();
+    handleRoute(); // Initial route check
+    window.addEventListener('hashchange', handleRoute);
+});

@@ -31,6 +31,15 @@
                         "display": ["Inter", "sans-serif"]
                     },
                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                    }
                 },
             },
         }
@@ -44,39 +53,126 @@
     <div id="app" class="flex flex-col min-h-screen">
         <header
             class="flex items-center justify-between border-b border-border-light dark:border-border-dark px-6 lg:px-10 py-3 bg-surface-light dark:bg-surface-dark sticky top-0 z-50">
-            <div class="flex items-center gap-4">
+            <a href="#/" class="flex items-center gap-4 hover:opacity-80 transition-opacity">
                 <div class="size-10 rounded-md bg-primary flex items-center justify-center text-white">
                     <span class="material-symbols-outlined">trending_up</span>
                 </div>
                 <h2
                     class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight tracking-tight">
                     makroekonomik.com</h2>
-            </div>
+            </a>
         </header>
         <main class="flex-1 w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+            <!-- Landing View -->
+            <div id="landing-view" class="flex flex-col gap-8">
                 <div class="flex flex-col gap-2 max-w-2xl">
                     <h1
                         class="text-4xl md:text-5xl font-black leading-tight tracking-tight text-text-main-light dark:text-text-main-dark">
-                        Asgari Ücret Alım Gücü</h1>
+                        Türkiye Ekonomik Verileri
+                    </h1>
                     <p
                         class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-relaxed">
-                        Güncel asgari ücretin temel ihtiyaçlardan yatırım araçlarına kadar farklı kalemler karşısındaki
-                        satın alma gücünü ve piyasa değerini analiz edin.
+                        Türkiye ekonomisine dair güncel veriler, istatistikler ve analizler. İlgilendiğiniz veriyi
+                        seçerek detayları inceleyebilirsiniz.
                     </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Asgari Ücret Card -->
+                    <a href="#/min-wage"
+                        class="group bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 hover:shadow-lg hover:border-primary transition-all duration-300 flex flex-col gap-4">
+                        <div
+                            class="size-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">payments</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text-main-light dark:text-text-main-dark mb-2">Asgari
+                                Ücret</h3>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Güncel asgari
+                                ücretin alım gücü, yıllara göre değişimi ve karşılaştırmalı analizi.</p>
+                        </div>
+                        <div class="mt-auto pt-4 flex items-center text-primary text-sm font-bold">
+                            <span>İncele</span>
+                            <span
+                                class="material-symbols-outlined text-lg ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </div>
+                    </a>
+
+                    <!-- Inflation Placeholder -->
                     <div
-                        class="flex items-center gap-2 mt-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        <span class="material-symbols-outlined text-sm">schedule</span>
-                        <span id="last-updated"></span>
+                        class="opacity-60 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 flex flex-col gap-4 cursor-not-allowed">
+                        <div
+                            class="size-12 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-2xl">percent</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text-main-light dark:text-text-main-dark mb-2">Enflasyon
+                                Verileri</h3>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">TÜFE, ÜFE ve
+                                enflasyon sepetindeki değişimlerin detaylı analizi.</p>
+                        </div>
+                        <div
+                            class="mt-auto pt-4 flex items-center text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold uppercase tracking-wider">
+                            <span>Yakında</span>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Rate Placeholder -->
+                    <div
+                        class="opacity-60 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 flex flex-col gap-4 cursor-not-allowed">
+                        <div
+                            class="size-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-2xl">currency_exchange</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text-main-light dark:text-text-main-dark mb-2">Döviz
+                                Kurları</h3>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Dolar, Euro ve
+                                diğer para birimlerinin TL karşısındaki tarihsel performansı.</p>
+                        </div>
+                        <div
+                            class="mt-auto pt-4 flex items-center text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold uppercase tracking-wider">
+                            <span>Yakında</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mb-8">
-                <div id="salary-card"
-                    class="bg-gradient-to-r from-primary to-blue-600 rounded-xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
+
+            <!-- Min Wage View -->
+            <div id="min-wage-view" class="hidden animate-fade-in">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                    <div class="flex flex-col gap-2 max-w-2xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <a href="#/"
+                                class="flex items-center gap-1 text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-base">arrow_back</span>
+                                <span>Ana Sayfa</span>
+                            </a>
+                        </div>
+                        <h1
+                            class="text-4xl md:text-5xl font-black leading-tight tracking-tight text-text-main-light dark:text-text-main-dark">
+                            Asgari Ücret</h1>
+                        <p
+                            class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-relaxed">
+                            Güncel asgari ücretin temel ihtiyaçlardan yatırım araçlarına kadar farklı kalemler
+                            karşısındaki
+                            satın alma gücünü ve piyasa değerini analiz edin.
+                        </p>
+                        <div
+                            class="flex items-center gap-2 mt-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                            <span class="material-symbols-outlined text-sm">schedule</span>
+                            <span id="last-updated"></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
+                <div class="mb-8">
+                    <div id="min-wage-card"
+                        class="bg-gradient-to-r from-primary to-blue-600 rounded-xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
+                    </div>
+                </div>
+                <div id="product-grid"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
+                </div>
             </div>
 
         </main>
