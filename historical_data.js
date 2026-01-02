@@ -704,7 +704,8 @@ const historicalData = {
       "month": "Ocak",
       "hungerLimit": 30143.75,
       "povertyLimit": 98188.11,
-      "minWage": 28075.50    
+      "minWage": 28075.50
+    }
   ],
   "bread": [
     { "date": "2016", "price": 1.25, "gram": 250, "minimum_wage": 1300.99 },
