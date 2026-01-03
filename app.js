@@ -9,6 +9,8 @@ let inflationChartInstance = null;
 let limitsChartInstance = null;
 // Global variable for exchange view chart
 let exchangeChartInstance = null;
+// Global variable for housing view chart
+let housingChartInstance = null;
 
 // Utility function for generic number formatting (Turkish style)
 const formatNumber = (value, fractionDigits = 0) => {
@@ -858,6 +860,9 @@ async function handleRoute() {
     } else if (hash === '#/exchange') {
         await loadView('exchange');
         renderExchangeView();
+    } else if (hash === '#/housing') {
+        await loadView('housing');
+        renderHousingView();
     } else {
         await loadView('landing');
     }
@@ -870,3 +875,216 @@ document.addEventListener('DOMContentLoaded', () => {
     handleRoute();
     window.addEventListener('hashchange', handleRoute);
 });
+
+
+// Function to render Housing View
+async function renderHousingView() {
+    const loadingEl = document.getElementById('housing-loading');
+    const contentEl = document.getElementById('housing-content');
+    const citySelect = document.getElementById('housing-city-select');
+
+    if (!loadingEl || !contentEl) return;
+
+    try {
+        // Load data if not already loaded
+        const data = await HousingDataManager.loadData();
+
+        if (!data || Object.keys(data).length === 0) {
+            console.error("No housing data found");
+            loadingEl.innerHTML = '<div class="text-red-500">Veri yüklenemedi.</div>';
+            return;
+        }
+
+        // Populate City Select if empty
+        if (citySelect && citySelect.options.length <= 1) {
+            const cities = HousingDataManager.getCityList();
+            cities.forEach(city => {
+                // Skip TOPLAM as it represents "Total" (Already in HTML as "Türkiye Geneli")
+                if (city === 'TOPLAM') return;
+
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+
+            // Add Listener
+            citySelect.addEventListener('change', (e) => {
+                updateHousingDashboard(e.target.value);
+            });
+        }
+
+        // Hide loader, show content
+        loadingEl.classList.add('hidden');
+        contentEl.classList.remove('hidden');
+        contentEl.classList.add('animate-fade-in');
+
+        // Render Initial Dashboard (Default: TOPLAM)
+        updateHousingDashboard('TOPLAM');
+
+    } catch (error) {
+        console.error("Error in renderHousingView:", error);
+    }
+}
+
+function updateHousingDashboard(city) {
+    const cityData = HousingDataManager.getCityData(city);
+    if (!cityData || cityData.length === 0) return;
+
+    // Get latest year data
+    const latest = cityData[0]; // Sorted by Year Desc
+    if (!latest) return;
+
+    // Update KPI Cards
+    const totalEl = document.getElementById('housing-total-sales');
+    if (totalEl) totalEl.textContent = formatNumber(latest.totalSales);
+
+    const yearEl = document.getElementById('housing-year-label');
+    if (yearEl) yearEl.textContent = `(${latest.year})`;
+
+    const firstEl = document.getElementById('housing-first-sales');
+    if (firstEl) firstEl.textContent = formatNumber(latest.firstHand);
+
+    const firstRatio = latest.totalSales > 0 ? (latest.firstHand / latest.totalSales) * 100 : 0;
+    const firstRatioEl = document.getElementById('housing-first-ratio');
+    if (firstRatioEl) firstRatioEl.textContent = formatNumber(firstRatio, 1);
+
+    const secondEl = document.getElementById('housing-second-sales');
+    if (secondEl) secondEl.textContent = formatNumber(latest.secondHand);
+
+    const secondRatio = latest.totalSales > 0 ? (latest.secondHand / latest.totalSales) * 100 : 0;
+    const secondRatioEl = document.getElementById('housing-second-ratio');
+    if (secondRatioEl) secondRatioEl.textContent = formatNumber(secondRatio, 1);
+
+    const mortRatioEl = document.getElementById('housing-mortgage-ratio');
+    if (mortRatioEl) mortRatioEl.textContent = '%' + formatNumber(latest.mortgageRatio, 1);
+
+    const mortSalesEl = document.getElementById('housing-mortgage-sales');
+    if (mortSalesEl) mortSalesEl.textContent = `(${formatNumber(latest.mortgage)} Adet)`;
+
+    // Update Table
+    const tableBody = document.getElementById('housing-table-body');
+    if (tableBody) {
+        tableBody.innerHTML = cityData.map(item => `
+            <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
+                <td class="py-4 px-6 text-sm font-medium text-left text-text-main-light dark:text-text-main-dark">${item.year}</td>
+                <td class="py-4 px-6 text-sm font-bold text-right text-text-main-light dark:text-text-main-dark">${formatNumber(item.totalSales)}</td>
+                <td class="py-4 px-6 text-sm text-right text-text-secondary-light dark:text-text-secondary-dark">${formatNumber(item.firstHand)}</td>
+                <td class="py-4 px-6 text-sm text-right text-text-secondary-light dark:text-text-secondary-dark">${formatNumber(item.secondHand)}</td>
+                <td class="py-4 px-6 text-sm text-right text-text-secondary-light dark:text-text-secondary-dark">${formatNumber(item.mortgage)}</td>
+                <td class="py-4 px-6 text-sm text-right font-medium text-purple-600 dark:text-purple-400">%${formatNumber(item.mortgageRatio, 2)}</td>
+            </tr>
+        `).join('');
+    }
+
+    // Update Chart
+    renderHousingChart(cityData, city);
+}
+
+function renderHousingChart(data, cityName) {
+    const ctx = document.getElementById('housingChart');
+    if (!ctx) return;
+
+    if (housingChartInstance) {
+        housingChartInstance.destroy();
+    }
+
+    // Data is Descending (Newest first), reverse for Chart (Oldest first)
+    // Filter out null/undefined years if any
+    const chartData = [...data].reverse().filter(d => d.year);
+
+    housingChartInstance = new Chart(ctx.getContext('2d'), {
+        type: 'bar', // Using mixed chart type
+        data: {
+            labels: chartData.map(d => d.year),
+            datasets: [
+                {
+                    label: 'Sıfır Konut',
+                    data: chartData.map(d => d.firstHand),
+                    backgroundColor: 'rgba(34, 197, 94, 0.7)', // Green
+                    borderColor: '#22c55e',
+                    borderWidth: 1,
+                    stack: 'Stack 0',
+                    order: 2
+                },
+                {
+                    label: 'İkinci El',
+                    data: chartData.map(d => d.secondHand),
+                    backgroundColor: 'rgba(249, 115, 22, 0.7)', // Orange
+                    borderColor: '#f97316',
+                    borderWidth: 1,
+                    stack: 'Stack 0',
+                    order: 3
+                },
+                {
+                    label: 'İpotekli Oranı (%)',
+                    data: chartData.map(d => d.mortgageRatio),
+                    type: 'line',
+                    borderColor: '#9333ea', // Purple
+                    backgroundColor: '#9333ea',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#9333ea',
+                    pointRadius: 4,
+                    yAxisID: 'y1',
+                    order: 1,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#4c669a' }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleColor: '#f8fafc',
+                    bodyColor: '#f8fafc',
+                    padding: 12,
+                    callbacks: {
+                        label: (context) => {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.dataset.type === 'line') {
+                                label += '%' + formatNumber(context.parsed.y, 2);
+                            } else {
+                                label += formatNumber(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }
+                },
+                y: {
+                    position: 'left',
+                    title: { display: true, text: 'Konut Satış Adedi' },
+                    grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }
+                },
+                y1: {
+                    position: 'right',
+                    title: { display: true, text: 'İpotekli Satış (%)' },
+                    grid: { display: false },
+                    min: 0,
+                    // max: 100, // Optional: fix to 100% or let it auto-scale
+                    ticks: { color: '#a855f7', callback: (value) => '%' + value }
+                }
+            }
+        }
+    });
+}

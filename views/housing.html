@@ -1,0 +1,133 @@
+<div class="space-y-6 animate-fade-in">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-4">
+            <a href="#/" class="p-2 -ml-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+            </a>
+            <div>
+                <h1 class="text-2xl font-bold text-text-main-light dark:text-text-main-dark flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">real_estate_agent</span>
+                    Konut Satış İstatistikleri
+                </h1>
+                <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">
+                    İl bazında konut satış verileri, ipotekli satış oranları ve yıllık değişimler
+                </p>
+            </div>
+        </div>
+
+        <!-- City Filter -->
+        <div class="w-full sm:w-auto">
+            <select id="housing-city-select" 
+                class="w-full sm:min-w-[200px] bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer hover:border-primary transition-colors">
+                <option value="TOPLAM">Türkiye Geneli</option>
+                <!-- Options will be populated via JS -->
+            </select>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="housing-loading" class="flex justify-center py-20">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+    </div>
+
+    <!-- Content (Hidden while loading) -->
+    <div id="housing-content" class="space-y-6 hidden">
+        
+        <!-- KPI Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Total Sales Card -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+                        <span class="material-symbols-outlined">home</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Toplam Satış</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="housing-total-sales" class="text-2xl font-bold text-text-main-light dark:text-text-main-dark">-</h3>
+                    <span id="housing-year-label" class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">(-)</span>
+                </div>
+            </div>
+
+            <!-- First Hand Sales Card -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg">
+                        <span class="material-symbols-outlined">key</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Sıfır Konut (İlk El)</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="housing-first-sales" class="text-2xl font-bold text-text-main-light dark:text-text-main-dark">-</h3>
+                    <span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">%<span id="housing-first-ratio">-</span></span>
+                </div>
+            </div>
+
+            <!-- Second Hand Sales Card -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-lg">
+                        <span class="material-symbols-outlined">handshake</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">İkinci El Satış</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="housing-second-sales" class="text-2xl font-bold text-text-main-light dark:text-text-main-dark">-</h3>
+                    <span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">%<span id="housing-second-ratio">-</span></span>
+                </div>
+            </div>
+
+            <!-- Mortgage Ratio Card -->
+            <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg">
+                        <span class="material-symbols-outlined">percent</span>
+                    </div>
+                    <span class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">İpotekli Satış Oranı</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="housing-mortgage-ratio" class="text-2xl font-bold text-text-main-light dark:text-text-main-dark">-%</h3>
+                    <span id="housing-mortgage-sales" class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">(- Adet)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chart -->
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-text-main-light dark:text-text-main-dark mb-6">Yıllık Satış Trendi</h3>
+            <div class="h-[350px] w-full">
+                <canvas id="housingChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Detailed Table -->
+        <div class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark overflow-hidden shadow-sm">
+            <div class="p-6 border-b border-border-light dark:border-border-dark">
+                <h3 class="text-lg font-bold text-text-main-light dark:text-text-main-dark">Yıllara Göre Detaylı Satış Verileri</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-background-light dark:bg-background-dark/50">
+                        <tr>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark text-left">Yıl</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark text-right">Toplam Satış</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark text-right">Sıfır Konut</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark text-right">İkinci El</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark text-right">İpotekli Satış</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark text-right">İpotekli Oranı</th>
+                        </tr>
+                    </thead>
+                    <tbody id="housing-table-body" class="divide-y divide-border-light dark:divide-border-dark">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Data Source Note -->
+        <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
+            * Veriler TÜİK (Türkiye İstatistik Kurumu) kaynaklıdır. Yıl bitmeden alınan verilerde o yılın tamamlanmış ayları esas alınır.
+        </div>
+    </div>
+</div>
