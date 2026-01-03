@@ -940,7 +940,9 @@ function updateHousingDashboard(city) {
     if (totalEl) totalEl.textContent = formatNumber(latest.totalSales);
 
     const yearEl = document.getElementById('housing-year-label');
-    if (yearEl) yearEl.textContent = `(${latest.year})`;
+    if (yearEl) {
+        yearEl.textContent = `(${latest.year}${latest.year === '2025' || latest.year === 2025 ? '*' : ''})`;
+    }
 
     const firstEl = document.getElementById('housing-first-sales');
     if (firstEl) firstEl.textContent = formatNumber(latest.firstHand);
