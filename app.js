@@ -1019,7 +1019,7 @@ function renderHousingChart(data, cityName) {
                     order: 3
                 },
                 {
-                    label: 'İpotekli Oranı (%)',
+                    label: 'Kredili Satış Oranı (%)',
                     data: chartData.map(d => d.mortgageRatio),
                     type: 'line',
                     borderColor: '#9333ea', // Purple
@@ -1080,7 +1080,7 @@ function renderHousingChart(data, cityName) {
                 },
                 y1: {
                     position: 'right',
-                    title: { display: true, text: 'İpotekli Satış (%)' },
+                    title: { display: true, text: 'Kredili Satış Oranı (%)' },
                     grid: { display: false },
                     min: 0,
                     // max: 100, // Optional: fix to 100% or let it auto-scale
