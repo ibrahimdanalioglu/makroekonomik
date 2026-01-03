@@ -1,0 +1,92 @@
+<div class="space-y-6 animate-fade-in">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-text-main-light dark:text-text-main-dark">Hanehalkı Kredi
+                Borcu</h1>
+            <p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">Yıllara ve banka türlerine göre borç
+                dağılımı</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span
+                class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium">
+                Veri Kaynağı: TCMB
+            </span>
+        </div>
+    </div>
+
+    <!-- Alert / Info -->
+    <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-lg">
+        <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
+            <div>
+                <p class="text-sm text-blue-800 dark:text-blue-200">
+                    Bu veriler bankaların hanehalkına kullandırdığı bireysel kredileri, kredili mevduat hesaplarını
+                    (KMH) ve kredi kartı borçlarını kapsamaktadır. Ticari krediler dahil değildir.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Trend Chart -->
+        <div
+            class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-text-main-light dark:text-text-main-dark mb-4">Borç Gelişimi (Yıllık
+                Trend)
+                <span
+                    class="block text-xs font-normal text-text-secondary-light dark:text-text-secondary-dark mt-1">Trilyon
+                    TL</span>
+            </h3>
+            <div class="h-[300px] w-full relative">
+                <canvas id="creditTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Distribution Chart -->
+        <div
+            class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-text-main-light dark:text-text-main-dark mb-4">Banka Türüne Göre Dağılım
+            </h3>
+            <div class="h-[300px] w-full relative flex items-center justify-center">
+                <canvas id="creditDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div
+        class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-border-light dark:border-border-dark flex items-center justify-between">
+            <h3 class="text-lg font-bold text-text-main-light dark:text-text-main-dark">Detaylı Veriler</h3>
+            <!-- Export/Download buttons can be added here -->
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-background-light dark:bg-background-dark">
+                    <tr>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark">
+                            Yıl</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                            Mevduat Bankaları</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                            Katılım Bankaları</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                            Kalkınma ve Yatırım</th>
+                        <th
+                            class="py-3 px-4 text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark border-b border-border-light dark:border-border-dark text-right">
+                            Toplam Borç</th>
+                    </tr>
+                </thead>
+                <tbody id="credit-table-body">
+                    <!-- Content will be injected by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

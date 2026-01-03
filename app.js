@@ -11,6 +11,9 @@ let limitsChartInstance = null;
 let exchangeChartInstance = null;
 // Global variable for housing view chart
 let housingChartInstance = null;
+// Global variable for household credit view charts
+let householdCreditTrendChartInstance = null;
+let householdCreditDistChartInstance = null;
 
 // Utility function for generic number formatting (Turkish style)
 const formatNumber = (value, fractionDigits = 0) => {
@@ -863,6 +866,9 @@ async function handleRoute() {
     } else if (hash === '#/housing') {
         await loadView('housing');
         renderHousingView();
+    } else if (hash === '#/householdCreditDebt') {
+        await loadView('householdCreditDebt');
+        renderHouseholdCreditDebtView();
     } else {
         await loadView('landing');
     }
@@ -1081,12 +1087,161 @@ function renderHousingChart(data, cityName) {
                 y1: {
                     position: 'right',
                     title: { display: true, text: 'Kredili Satış Oranı (%)' },
-                    grid: { display: false },
-                    min: 0,
-                    // max: 100, // Optional: fix to 100% or let it auto-scale
-                    ticks: { color: '#a855f7', callback: (value) => '%' + value }
                 }
             }
         }
     });
 }
+
+// Function to render Household Credit Debt View
+async function renderHouseholdCreditDebtView() {
+    try {
+        const data = await HouseholdCreditDataManager.loadData();
+        if (!data || data.length === 0) {
+            console.error("Household credit data not found");
+            return;
+        }
+
+        // Render Table
+        const tableBody = document.getElementById('credit-table-body');
+        if (tableBody) {
+            // Sort by Date Descending (Newest first)
+            const sortedData = [...data].sort((a, b) => b.Tarih - a.Tarih);
+
+            tableBody.innerHTML = sortedData.map(item => `
+                <tr class="hover:bg-background-light dark:hover:bg-background-dark/50 transition-colors border-b border-border-light dark:border-border-dark">
+                    <td class="py-4 px-4 text-sm font-medium text-left text-text-main-light dark:text-text-main-dark">${item.Tarih}</td>
+                    <td class="py-4 px-4 text-sm text-right text-text-secondary-light dark:text-text-secondary-dark">₺${formatNumber(item['MEVDUAT BANKALARI'], 0)}</td>
+                    <td class="py-4 px-4 text-sm text-right text-text-secondary-light dark:text-text-secondary-dark">₺${formatNumber(item['KATILIM BANKALARI'], 0)}</td>
+                    <td class="py-4 px-4 text-sm text-right text-text-secondary-light dark:text-text-secondary-dark">₺${formatNumber(item['KALKINMA VE YATIRIM BANKALARI'], 0)}</td>
+                     <td class="py-4 px-4 text-sm text-right font-bold text-text-main-light dark:text-text-main-dark">₺${formatNumber(item['TOPLAM'], 0)}</td>
+                </tr>
+             `).join('');
+
+            renderHouseholdCreditCharts(sortedData);
+        }
+
+    } catch (error) {
+        console.error("Error rendering household credit view:", error);
+    }
+}
+
+function renderHouseholdCreditCharts(data) {
+    // Prepare data for charts (Oldest first for trend line)
+    const chartData = [...data].reverse();
+
+    // 1. Trend Chart
+    const ctxTrend = document.getElementById('creditTrendChart');
+    if (ctxTrend) {
+        if (householdCreditTrendChartInstance) {
+            householdCreditTrendChartInstance.destroy();
+        }
+
+        householdCreditTrendChartInstance = new Chart(ctxTrend.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: chartData.map(d => d.Tarih),
+                datasets: [{
+                    label: 'Toplam Kredi Borcu',
+                    data: chartData.map(d => d.TOPLAM),
+                    borderColor: '#f97316', // Orange
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#f97316',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        padding: 12,
+                        callbacks: {
+                            label: (context) => `₺${formatNumber(context.parsed.y)}`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b',
+                            callback: (value) => {
+                                if (value >= 1000000000000) return (value / 1000000000000).toFixed(0);
+                                if (value >= 1000000000) return (value / 1000000000).toFixed(1) + ' Mr';
+                                return value;
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }
+                    }
+                }
+            }
+        });
+    }
+
+    // 2. Distribution Chart (Latest Year)
+    const ctxDist = document.getElementById('creditDistributionChart');
+    if (ctxDist) {
+        if (householdCreditDistChartInstance) {
+            householdCreditDistChartInstance.destroy();
+        }
+
+        const latestData = data[0]; // Newest data (sorted desc)
+
+        householdCreditDistChartInstance = new Chart(ctxDist.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Mevduat Bankaları', 'Katılım Bankaları', 'Kalkınma ve Yatırım'],
+                datasets: [{
+                    data: [
+                        latestData['MEVDUAT BANKALARI'],
+                        latestData['KATILIM BANKALARI'],
+                        latestData['KALKINMA VE YATIRIM BANKALARI']
+                    ],
+                    backgroundColor: [
+                        '#3b82f6', // Blue
+                        '#22c55e', // Green
+                        '#a855f7'  // Purple
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#4c669a',
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const value = context.parsed;
+                                const label = context.label;
+                                const percentage = ((value / latestData.TOPLAM) * 100).toFixed(1) + '%';
+                                return `${label}: ₺${formatNumber(value)} (${percentage})`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+

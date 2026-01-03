@@ -3,7 +3,7 @@ import json
 import re
 from evds import evdsAPI
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # .env dosyasındaki anahtarı yükle
 load_dotenv()
@@ -18,15 +18,29 @@ evds = evdsAPI(api_key)
 
 def fetch_latest_usd():
     try:
-        # USD Satış Kuru serisini çek (TP.DK.USD.S.YTL)
-        # Bugünün ve dünün verisini çekmek için kısa bir aralık kullanıyoruz
-        today = datetime.now().strftime('%d-%m-%Y')
-        data = evds.get_data(['TP.DK.USD.S.YTL'], startdate=today, enddate=today)
+        now = datetime.now()
+        # Haftanın günü (0=Pazartesi ... 6=Pazar)
+        weekday = now.weekday()
         
-        # Eğer bugün veri yoksa (hafta sonu vb.), son mevcut veriyi al
+        target_date = now
+        
+        # Eğer Cumartesi (5) ise 1 gün geri git (Cuma)
+        if weekday == 5:
+            target_date = now - timedelta(days=1)
+        # Eğer Pazar (6) ise 2 gün geri git (Cuma)
+        elif weekday == 6:
+            target_date = now - timedelta(days=2)
+            
+        target_date_str = target_date.strftime('%d-%m-%Y')
+        
+        # USD Satış Kuru serisini çek (TP.DK.USD.S.YTL)
+        data = evds.get_data(['TP.DK.USD.S.YTL'], startdate=target_date_str, enddate=target_date_str)
+        
+        # Eğer veri yoksa (Resmi tatil vs.), son 7 günlük veriye bak
         if data.empty or data['TP_DK_USD_S_YTL'].iloc[-1] is None:
-             # Son 7 günlük veriye bak ki en güncel iş gününü yakalayalım
-             data = evds.get_data(['TP.DK.USD.S.YTL'], startdate="20-12-2024") # Güvenli bir geçmiş tarih
+             # target_date zaten Cuma olabilir ama belki o da tatildir, garantilemek için geniş aralık
+             week_ago = (now - timedelta(days=7)).strftime('%d-%m-%Y')
+             data = evds.get_data(['TP.DK.USD.S.YTL'], startdate=week_ago)
         
         latest_val = data['TP_DK_USD_S_YTL'].dropna().iloc[-1]
         return float(latest_val)
@@ -45,7 +59,7 @@ def update_data_js(usd_price):
         pattern = r'({ name: "ABD Doları", .*? unitPrice: )([\d.]+)(, .*? })'
         
         if re.search(pattern, content):
-            new_content = re.sub(pattern, rf'\1{usd_price:.2f}\3', content)
+            new_content = re.sub(pattern, rf'\g<1>{usd_price:.2f}\g<3>', content)
             
             # Tarihi de güncelleyelim
             now = datetime.now().strftime('%d.%m.%Y %H:%M')
