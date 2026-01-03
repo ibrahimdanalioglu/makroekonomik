@@ -143,7 +143,7 @@ const HousingDataManager = {
     extractCities(parsedData) {
         if (parsedData.length === 0) return;
         // Keys of the first row object, excluding 'year'
-        this.cities = Object.keys(parsedData[0]).filter(k => k !== 'year').sort();
+        this.cities = Object.keys(parsedData[0]).filter(k => k !== 'year').sort((a, b) => a.localeCompare(b, 'tr-TR'));
         // Move "TOPLAM" to the beginning if exists
         const totalIndex = this.cities.indexOf('TOPLAM');
         if (totalIndex > -1) {
