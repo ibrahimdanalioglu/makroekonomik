@@ -1,0 +1,10 @@
+{
+  "name": "economy-app",
+  "version": "1.0.0",
+  "description": "Makroekonomik Veriler Paneli",
+  "scripts": {
+    "start": "npx http-server . -o"
+  },
+  "author": "Ibrahim Danalioglu",
+  "license": "ISC"
+}
